@@ -9,6 +9,12 @@ gives you a bucket to pour some data into.
 
 _This is that bucket._
 
+# Installing
+-------
+
+Update the settings file with the values for your enviroment, in that file you'll also find the SQL for creating the database table.
+
+_Create/Upload/add/Edit and you'll have your own /b._
 
 # Saving
 -------
