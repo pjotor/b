@@ -7,7 +7,7 @@ interface db {
 	const table  = "YOUR_TABLE_NAME";
 }	
 
-interface chrypto {
+interface crypto {
 	const shaker = "INSERT_A_RANDOM_STRING_OF_AT_LEAST_32_CHARACTERS_HERE";
 	const debug  = "INSERT_ANOTHER_RANDOM_STRING_HERE";
 }

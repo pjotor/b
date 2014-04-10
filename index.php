@@ -20,7 +20,7 @@ function simple_encrypt($text){
     	base64_encode(
 		    	mcrypt_encrypt(
 		    		MCRYPT_RIJNDAEL_256, 
-		    		substr(constant('chrypto::shaker'), 0, 32), 
+		    		substr(constant('crypto::shaker'), 0, 32), 
 		    		$text, MCRYPT_MODE_ECB, 
 		    		mcrypt_create_iv(
 		    			mcrypt_get_iv_size(
@@ -37,7 +37,7 @@ function simple_decrypt($text){
     return trim(
     	mcrypt_decrypt(
     		MCRYPT_RIJNDAEL_256, 
-    		substr(constant('chrypto::shaker'), 0, 32), 
+    		substr(constant('crypto::shaker'), 0, 32), 
     		base64_decode($text), 
     		MCRYPT_MODE_ECB, 
     		mcrypt_create_iv(
@@ -65,7 +65,7 @@ function default_error(){
 }
 function load($key, $appid){
 	$mysqli = db();
-	$id = toId( san($key), constant('chrypto::shaker') );
+	$id = toId( san($key), constant('crypto::shaker') );
 	$app = san( $appid );
 	if($result = $mysqli->query("SELECT content, created FROM " . constant('db::table') . "  WHERE `id` = $id AND `key` like '$app';")) {
 		if( mysqli_num_rows ( $result ) > 0 ){
@@ -109,7 +109,7 @@ function list_key($appid){
 			header("HTTP/1.0 200 OK");
 			while ($row = $result->fetch_assoc()) {
 				$set[] = array( 
-					'id' => toKey( $row['id'], constant('chrypto::shaker') ), 
+					'id' => toKey( $row['id'], constant('crypto::shaker') ), 
 					'content' => base64_decode( $row["content"] ), 
 					'created' => $row["created"] 
 				);
@@ -142,7 +142,7 @@ function list_key($appid){
 }
 function update($content, $appid, $key){
 	$mysqli = db();
-	$id = toId( san($key), constant('chrypto::shaker') );
+	$id = toId( san($key), constant('crypto::shaker') );
 	$app = san( $appid );
 	if( 
 		$mysqli->query("UPDATE " . constant('db::table') . " SET `content`='" . 
@@ -176,7 +176,7 @@ function insert($content, $appid){
 		echo jsonp( array( 
 			'type' => 'success', 
 			'info' => 'inserted', 
-			'id' => toKey($mysqli->insert_id, constant('chrypto::shaker')) 
+			'id' => toKey($mysqli->insert_id, constant('crypto::shaker')) 
 		), $GLOBALS['service_callback'] );
 	} else {
 		header("HTTP/1.0 500 Error While Inserting");
@@ -215,11 +215,11 @@ switch (true) {
 	/**
 	* TESTS
 	**/
-	//Resolve an ID from enchrypted string
+	//Resolve an ID from encrypted string
 	case ( isset( $_GET["i"] ) && isset( $_REQUEST["auth"] ) ):
 		header("HTTP/1.0 200 ID Test");
 
-		echo jsonp( (san($_REQUEST["auth"]) == simple_encrypt( constant('chrypto::debug') )) ?
+		echo jsonp( (san($_REQUEST["auth"]) == simple_encrypt( constant('crypto::debug') )) ?
 			array( 
 				'type' => 'test', 
 				'info' => 'ID Test', 
@@ -238,7 +238,7 @@ switch (true) {
 	case ( isset( $_GET["k"] ) && isset( $_REQUEST["auth"] ) ):
 		header("HTTP/1.0 200 Key Test");
 
-		echo jsonp( (san($_REQUEST["auth"]) == simple_encrypt( constant('chrypto::debug') )) ?
+		echo jsonp( (san($_REQUEST["auth"]) == simple_encrypt( constant('crypto::debug') )) ?
 			array( 
 				'type' => 'test', 
 				'info' => 'Key Test : ' . strlen($num), 
