@@ -9,7 +9,6 @@ gives you a bucket to pour some data into.
 
 _This is that bucket._
 
-* * *
 
 # Saving
 -------
@@ -41,7 +40,6 @@ URL length, so try to keep it under 1855 characters in total._
     }
         
 
-* * *
 
 If the save is successful you will get a JSON object back consisting of these
 keys:
@@ -59,7 +57,6 @@ keys:
     }
         
 
-* * *
 
 # Loading
 -------
@@ -85,7 +82,6 @@ data.
     }
         
 
-* * *
 
 Successfully loading data returns these keys:
 
@@ -106,7 +102,6 @@ Successfully loading data returns these keys:
     }
         
 
-* * *
 
 # Errors
 -------
@@ -123,11 +118,9 @@ something else is wrong. This is what it can look like:
     }  
         
 
-* * *
 
 _Please note that all errors will be wrapped in a HTTP 500 response._
 
-* * *
 
 That's it. ♥
 
