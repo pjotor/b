@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>/b - persistant storage</title>
+  <link rel="stylesheet" type="text/css" href="okaida.css">
+  <script type='text/javascript' src="prism.js"></script>
+  <style type='text/css'>
+    @import url(http://fonts.googleapis.com/css?family=Share:400,400italic,700);
+    body {
+        font-family: 'Share', cursive;
+        background-color: #EEE;
+        padding: 1% 5%;
+        text-shadow: .1em .1em #FFF;
+    }
+    h2 {
+        font-style: italic;
+        letter-spacing: -.1em;
+        color: #888;
+    }
+    em {
+        color: #666;
+    }
+    pre {
+        border: .5em solid #FFF;
+        box-shadow: 0 0 1em rgba(0,0,0,.1);
+    }
+    li {
+        list-style: none;
+    }
+    li code {
+        display: inline-block;
+        width: 7em;
+    }
+    hr {
+        border: none;
+        border-bottom: .2em solid #E0E0E0;
+    }
+  </style>
+
+</head>
+<body>
+
+    <h1>/b</h1>
+    <h2>Persistant KeyValue storage</h2>
+    <p>
+        Some times you just need a quick and dirty data storage, something that just gives you a bucket to pour some data into.
+        <br/>
+        <em>This is that bucket.</em>
+    </p>
+
+    <hr/>
+
+    <h1>Saving</h1>
+
+    <p>
+        Saving is as simple as a <code>GET</code> request to the server. If an ID is supplied that post will be updated.
+        <br/>
+        <em>Remember that this method limits the amount of data transported to the max URL length, so try to keep it under 1855 characters in total.</em>
+    </p>
+
+    <h2>Save (jQuery)</h2>
+    <pre><code class="language-javascript">
+    function saveData(key, data, id){
+        var request = {
+            key: key,
+            data: JSON.stringify(data)
+        };
+        
+        if(id)
+            request.id = id;
+        
+        $.getJSON("/b", request)
+        .fail(function(re){ 
+            //Handle failures to save here
+        })
+        .done(function(re){
+            //Handle successful save here
+        })
+    }
+    </code></pre>
+                
+    <hr/>
+
+    <p>
+        If the save is successful you will get a JSON object back consisting of these keys:
+        <ul>
+            <li><code>type</code> Response type (ie. <em>"success"</em>)
+            <li><code>info</code> Action performed (ie. <em>"inserted"</em>)
+            <li><code>id</code> The ID of the element effected
+        </ul>
+    </p>
+               
+    <h2>Save response example</h2>
+    <pre><code class="language-javascript">
+    {
+        type: "success", 
+        info: "inserted", 
+        id: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqr"
+    }
+    </code></pre>
+                
+    <hr/>
+
+    <h1>Loading</h1>
+
+    <p>
+         Loading is just as simple, just supply the key of the bucket and the ID of the data.
+    </p>
+
+    <h2>Load (jQuery)</h2>
+    <pre><code class="language-javascript">
+    function loadData(key, id){
+        $.getJSON("/b",{
+            key: key,
+            id: id
+        })
+        .fail(function(re){ 
+            //Handle load fail here
+        })
+        .done(function(re){
+            //Handle successful loading here
+            //Don't forgett to parse it if it's JSON
+            //i.e. JSON.parse(re)
+        })
+    }
+    </code></pre>
+                
+    <hr/>
+
+    <p>
+        Successfully loading data returns these keys:
+        <ul>
+            <li><code>type</code> Response type (ie. <em>"success"</em>)
+            <li><code>info</code> Action performed (ie. <em>"loaded"</em>)
+            <li><code>id</code> The ID of the element effected
+            <li><code>data</code> The data saved (as a string)
+            <li><code>created</code> The time the ID was created            
+        </ul>
+    </p>
+
+    <h2>Load response example</h2>
+    <pre><code class="language-javascript">    
+    {
+        type: "success", 
+        info: "loaded", 
+        id: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqr",
+        data: '{"hello":"world"}', 
+        created: "1970-01-01 00:00:00"
+    }
+    </code></pre>
+                
+    <hr/>
+
+    <h1>Errors</h1>
+    <p>
+    Not often but sometimes you go goof up, then the server will return an error. This happens when you don't send enough parameters, the wrong parameters or something else is wrong. This is what it can look like:
+    </p>
+
+    <h2>Error response example</h2>
+    <pre><code class="language-javascript">
+    {
+        "type":"error",
+        "info":"wrong parameters"
+    }  
+    </code></pre>
+                
+    <hr/>
+
+    <p>
+        <em>Please note that all errors will be wrapped in a HTTP 500 response.</em>
+    </p>       
+                
+    <hr/>
+           
+    <p>That's it. <span style="color: #E00;">&#9829;</span></p>
+  
+</body>
+</html>
