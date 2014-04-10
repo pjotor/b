@@ -254,7 +254,14 @@ switch (true) {
 		break;
 
 	//Show basic usage examples if no arguments are supplied
-	case (count($_REQUEST) === 3);
+	case ( 
+		!isset( $_REQUEST["key"] ) && 
+		!isset( $_REQUEST["a"] ) && 
+		!isset( $_REQUEST["auth"] ) && 
+		!isset( $_REQUEST["i"] ) && 
+		!isset( $_REQUEST["id"] ) && 
+		!isset( $_REQUEST["key"] ) 
+	);
 		include "info.html";
 		break;
 
